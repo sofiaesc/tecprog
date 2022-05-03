@@ -1,0 +1,50 @@
+; PROCEDIMIENTO (SUMA):
+(+ 2 3)
+
+; STRING:
+"hola"
+
+; NUMERO:
+42
+
+; FRACCION A NRO MIXTO:
+22/7
+
+; DECIMAL:
+3.14
+
+; PROCEDIMIENTO (ERROR):
++
+
+; OPERADOR (QUOTE TRATA AL ARGUMENTO COMO SIMBOLO)
+'+
+
+; LISTA:
+'(a b c d)
+
+; DEFINIR PROCEDIMIENTO:
+(define cuadrado
+  (lambda(n)
+    (* n n)))
+
+; LLAMAR AL PROCEDIMIENTO:
+(cuadrado 2)
+(cuadrado 10)
+
+; USO CAR Y CDR:
+(car '(a b c))
+(cdr '(a b c))
+(car (cdr '(a b c)))
+(cdr (cdr '(a b c)))
+(car '((a b) (c d)))
+(cdr '((a b) (c d)))
+(caadr '(a (b c) d))
+
+; USO CONS:
+(cons 'a '())
+(cons 'a (cons 'b (cons 'c '())))
+(cons 'a 'b)
+
+; LISTA IMPROPIA:
+(cdr '(x . y)) ; devuelve y
+(car '(x . y)) ; devuelve x

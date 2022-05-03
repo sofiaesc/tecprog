@@ -1,0 +1,59 @@
+; EJERCICIO 1:
+(- (+ 7 (* 2 -1/3)) 10.7)
+(/ (* 7/3 5/9) (- 5/8 2/3))
+(+ 1 (/ 3 (+ 2 (/ 1 (+ 5 1/2)))))
+(* 1 (* -2 (* 3 (* -4 (* 5 (* -6 7))))))
+
+; EJERCICIO 2:
+(cons 'car '+) ; = (car . +)
+(list 'esto '(es muy fácil)) ; = (esto (es muy fácil))
+(cons 'pero '(se está complicando...)) ; = (pero se está complicando...)
+(cons '(y ahora no se que ) 'hizo) ; = ((y ahora no se que) . hizo)
+(quote (+ 7 2)) ; = (+ 7 2)
+(cons '+ '(10 3)) ; = (+ 10 3)
+(car '(+ 10 3))  ; = +
+(cdr '(+ 10 3))  ; = (10 3)
+cons  ; ERROR (#<procedure:cons>)
+(quote (cons (car (cdr (7 4)))) )  ; = (cons (car (cdr (7 4))))
+(quote cons) ; = cons
+(car (quote (quote cons))) ; = quote  
+(+ 2 3)  ; = 5
+(+ '2 '3)  ; = 5
+(+ (car '(2 3)) (car (cdr '(2 3))))  ; = 5
+((car (list + - * /)) 2 3) ; = 5
+
+; EJERCICIO 3:
+(car (car '((a b) (c d)))) ; = a
+(car (cdr (car '((a b) (c d))))) ; = b
+(car (car (cdr '((a b) (c d))))) ; = c
+(car (cdr (car (cdr '((a b) (c d)))))) ; = d
+
+; EJERCICIO 4:
+; además de las del ejercicio 3:
+(car '((a b) (c d))) ; = (a b)
+(cdr '((a b) (c d))) ; = ((c d))
+(car (cdr '((a b) (c d)))) ; = (c d)
+(cdr (car '((a b) (c d)))) ; = (b)
+(cdr (car (cdr '((a b) (c d))))) ; = (d) 
+(cdr (cdr '((a b) (c d)))) ; = ()
+(cdr (cdr (car '((a b) (c d))))) ; = ()
+
+; EJERCICIO 5
+((car (cdr (cdr (list + - * /)))) 5 5)
+; primero hace una lista de los operadores (+ - * /),
+; después toma la cola de la lista: (- * /),
+; vuelve a tomar la cola de esa lista: (* /),
+; toma el primer elemento de esa lista: *
+; con ese elemento, hace la operaciones (* 5 5) = 25.
+
+; EJERCICIO 6:
+; '( a b c ​.​ x)
+(cdr (cdr (cdr '(a b c . x))))
+; '(a b c x) 
+(car (cdr (cdr (cdr '(a b c x)))))
+; '((a ​.​ x) b)
+(cdr (car '((a . x) b)))
+; '(x . a)
+(car '(x . a))
+; '(a . x)
+(cdr '(a . x))
