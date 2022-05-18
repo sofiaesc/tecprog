@@ -40,25 +40,34 @@
                      x)
                    (cdr x))))))
 ; B REESCRITO:
-
+(let ((x '((a b) c)))
+  (cons
+   (let ((q (cdr x)))
+     (car q))
+   (let ((w (car x)))
+     (cons
+      (let ((e (cdr w)))
+        (car e))
+      (cons
+       (let ((r (car w)))
+         r)
+       (cdr w))))))
 
 ; EJERCICIO 4:
 ; a
 (let ((f (lambda (x) x)))
-(f 'a)) ; = a. El procedimiento recibe un x y devuelve ese x.
+(f 'a)) ; = a.
 
 ; b
 (let ((f (lambda x x)))
-(f 'a)) ; = (a). El procedimiento no recibe cuantos argumentos tiene y lo
-        ; pone en una lista.
+(f 'a)) ; = (a).
 
 ; c
 (let ((f (lambda (x . y) x)))
-(f 'a)) ; = a. El procedimiento recibe una lista y devuelve el primer elemento.
+(f 'a)) ; = a. 
 
 (let ((f (lambda (x . y) y)))
-(f 'a)) ; = (). El procedimiento recibe una lista y devuelve el segundo elemento.
-        ; Como tengo sólo a, devuelve una lista vacía que sería el próximo elemento.
+(f 'a)) ; = (). 
 
 ; EJERCICIO 5:
 (define ej5 (lambda (ecuacion)
@@ -104,15 +113,33 @@
 (circlestuff 3)
 
 ; EJERCICIO 10:
-; intentar programar la función exponente p/ parcial.
+
 (define distance2d
   (lambda (x y)
     ; chequeo que sea una lista impropia:
     ; si el cdr de la lista es "", es propia. si no es una lista, es impropia.
     (if (and (list? (cdr x)) (list? (cdr y)))
         "No se están comparando listas impropias."
-        (sqrt (+ (* (- (car y) (car x)) (- (car y) (car x))) (* (- (cdr y) (cdr x)) (- (cdr y) (cdr x))))))
-        ))
+        (let ((x1 (car x)) (x2 (car y)) (y1 (cdr x)) (y2 (cdr y)))
+          (sqrt (+ (* (- x1 x2) (- x1 x2)) (* (- y1 y2) (- y1 y2)))))
+        )))
 
 (distance2d '(1 . 1) '(2 . 2))
 (distance2d '(1 1) '(2 2))
+
+; EJERCICIO 11:
+(define proximo (lambda (x l)
+                  (if (null? l)
+                      (display "Lista vacia")
+                      (let ((d1 (distance2d x (car l))) (r (cdr l)))
+                        (if (null? r)
+                            d1
+                            (let ((d2 (proximo x r))) ; recursividad al llamar a la misma función.
+                              (if (< d1 d2)
+                                  d1
+                                  d2
+                                  )))))))
+
+(proximo '(0 . 0) '((1 . 0) (1 . 2) (2 . 2)))
+(proximo '(0 . 0) '((1 . 1) (2 . 1) (1 . 0)))
+(proximo '(0 . 0) '((1 . 1) (1 . 3) (2 . 1)))
