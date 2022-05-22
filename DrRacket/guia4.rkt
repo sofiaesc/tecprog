@@ -177,9 +177,34 @@
       "Lista vacía."
       (full-reverse-list-aux ls '()))))
 
-; preguntar cómo hacer con map.
-    
 (full-reverse-list '(1 (2 3 4 (3 (5 6)) 4)))
+
+(define reverse-aux
+  (lambda (ls aux)
+    (if (list? ls)
+          (if (null? ls)
+              aux
+              (reverse-aux (cdr ls) (cons (car ls) aux)))
+          ls
+          )))
+
+(define reverse-ls
+  (lambda (ls)
+    (reverse-aux ls ())))
+
+(define reverse-inside
+  (lambda (ls)
+    (if (list? ls)
+        (map (lambda (x) (reverse-ls (reverse-inside x))) ls)
+        ls
+        )))
+
+(define fullreverse-list2
+  (lambda (ls)
+    (reverse-ls (reverse-inside ls))
+    ))
+
+(fullreverse-list2 '(1 (2 3 4 (3 (5 6)) 4)))
  
 "EJERCICIO 8:"
 (define attach-at-end ; uso attach-at-end porque si paso lista y despues elemento, lo pongo al final.
