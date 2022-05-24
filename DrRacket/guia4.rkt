@@ -44,14 +44,15 @@
   (lambda (p1 ls)
     (map (lambda (x) (dist p1 x)) ls)))
 
-(define max_list ; obtengo mayor de la lista
+(define max_list
   (lambda (ls)
-    (if (null? ls)
-        0
-        (let ((p (car ls)) (q (max_list (cdr ls))))
-          (if (< p q)
-              q
-              p)))))
+    (let ((elem1 (car ls)))
+      (if (= (length ls) 1)
+          elem1
+          (let ((elem2 (max_list (cdr ls))))
+            (if (> elem2 elem1)
+                elem2
+                elem1))))))
 
 (define concatenar ; para concatenar listas
   (lambda (l1 l2)
