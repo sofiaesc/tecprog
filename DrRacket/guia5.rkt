@@ -198,7 +198,7 @@
 (suma-listas '(1 2 3 4) '(2 3 5))
 
 "EJERCICIO 12:"
-(define raiz ; obtengo raiz del arbol
+(define raiz ; obtengo raiz del arbol p7 dividir en izq y der.
   (lambda (ls)
     (if (null? ls)
         "Sintáxis incorrecta del árbol."
@@ -232,3 +232,15 @@
           )))
 
 (altura-arbol '((1 3 (4 2 5)) 6 (8 7 (10 9 (12 11 13)))))
+
+; ----------------------- arbol con sintaxis:
+; '() = vacío
+; '(4) = 2
+; '(4 (2) (6)) = 2
+; '(4 (2 (5 (1)) (6) = 3
+
+(define altura-arbol2
+  (lambda (ls)
+    (+ 1 (get-profundidad ls))))
+
+(altura-arbol2 '(4 (2 (5) (1)) (6)))
