@@ -1,22 +1,22 @@
 "EJERCICIO 1:"
-(define inv-aux
-  (lambda (l acc)
-    (if (list? l)   
-        (if (null? l)
-            acc
-            (inv-aux (cdr l) (cons (car l) acc))))
-    l))
-
-(define inv
-  (lambda (l)
-    (inv-aux l '())))
-
-(define concat-inv
+(define concatenar ; para concatenar listas
   (lambda (l1 l2)
     (if (null? l1)
-        (inv l2)
-        (let ((p (car l1)) (r (cdr l1)))
-          (cons p (concat-inv r l2))))))
+        l2
+        (cons (car l1) (concatenar (cdr l1) l2)))))
+
+(define inv ; invertir sin lista auxiliar (optimo)
+  (lambda (ls)
+    (if (null? ls)
+        '()
+        (concatenar (inv (cdr ls)) (cons (car ls) '())))))
+
+(define concat-inv ; función concatenar l con inversa l2
+(lambda (l1 l2)
+  (if (null? l1)
+      (inv l2)
+      (cons (car l1) (concat-inv (cdr l1) l2))
+      )))
 
 (concat-inv '(1 2 3) '(4 5 6))
 
@@ -39,7 +39,6 @@
 
 (pertenece 'a '(a b c) '(r f g a))
 (pertenece 'a '(a b c) '(r f g h))
-(pertenece 'a '(h b c) '(r f g h))
 
 "EJERCICIO 3:"
 (define cant-izq
@@ -89,19 +88,27 @@
 (fechap 31 11 1876)
 
 "EJERCICIO 6:"
-(define get-profundidad
+(define mayor
   (lambda (ls)
-    ()))
+    (let ((elem1 (car ls)))
+      (if (= (length ls) 1)
+          elem1
+          (let ((elem2 (mayor (cdr ls))))
+            (if (> elem2 elem1)
+                elem2
+                elem1))))))
+
+(define get-profundidad
+  (lambda (e)
+    (if (null? e)
+        0
+        (if (list? e)
+            (+ 1 (mayor (map (lambda (x) (get-profundidad x)) e)))
+            -1))))
 
 (get-profundidad '((1 (2)) (((5 7))) 4))
 
 "EJERCICIO 7:"
-(define concatenar ; para concatenar listas
-  (lambda (l1 l2)
-    (if (null? l1)
-        l2
-        (cons (car l1) (concatenar (cdr l1) l2)))))
-
 (define aplanar
   (lambda (l)
     (if (null? l)
@@ -191,6 +198,37 @@
 (suma-listas '(1 2 3 4) '(2 3 5))
 
 "EJERCICIO 12:"
-(define altura
-  (lambda (l)
-    ()))
+(define raiz ; obtengo raiz del arbol
+  (lambda (ls)
+    (if (null? ls)
+        "Sintáxis incorrecta del árbol."
+        (let ((p (car ls))  (r (cdr ls)))
+          (if (list? p)
+              (raiz r)
+              p
+              )))))
+
+(define lado-izquierdo ; obtengo lado izquierdo de la raiz del arbol
+  (lambda (ls e)
+    (if (eqv? (car ls) e)
+        ()
+        (cons (car ls) (lado-izquierdo (cdr ls) e)))))
+
+(define altura-arbol-aux ; obtengo profundidad mayor entre el lado izq y der.
+  (lambda (lf ls)
+    (let ((p (car ls)) (r (cdr ls)) (n (raiz ls)))
+      (if (eqv? p n)
+          (let ((p1 (get-profundidad (lado-izquierdo lf p))) (p2 (get-profundidad r)))
+            (if (> p1 p2)
+                p1
+                p2))
+          (altura-arbol-aux lf r)))))
+
+(define altura-arbol ; wrapper
+  (lambda (ls)
+    (if (null? ls)
+        0
+        (+ 2 (altura-arbol-aux ls ls)) ; sumo el nodo principal y la rama final
+          )))
+
+(altura-arbol '((1 3 (4 2 5)) 6 (8 7 (10 9 (12 11 13)))))
