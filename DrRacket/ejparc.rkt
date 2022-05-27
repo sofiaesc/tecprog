@@ -123,3 +123,73 @@
 
 (mult-rusa 27 82)
 
+#|
+COPA AMERICA
+Dados los resultados de los partidos, se desea identificar la cantidad de partidos que jugó cada
+equipo de fútbol.
+Entrada:
+( ( (Argentina . 5) (Brasil . 0 ) )
+( (Argentina . 3) (Bolivia . 2) )
+( (Argentina . 2) (Chile . 1) )
+( (Bolivia . 1) (Paraguay . 0) )
+( (Brasil . 1) (Venezuela . 0) )
+( (Colombia . 0) (Ecuador . 2) )
+( (Brasil . 2) (Ecuador . 1) )
+)
+Salida:
+((Argentina . 3) (Brasil . 3) (Bolivia . 2) (Chile . 1) (Paraguay . 1) (Venezuela . 1) (Colombia . 1)
+(Ecuador . 2))
+|#
+
+(define eliminar ; elimino el elemento dado de una lista.
+  (lambda (e ls)
+    (if (null? ls)
+        ()
+        (let ((p (car ls)) (r (cdr ls)))
+          (if (eqv? p e)
+              (eliminar e r)
+              (cons p (eliminar e r)))))))
+
+(define contar ; cuento la cantidad de veces que aparece un país en la lista.
+  (lambda (e ls)
+    (if (null? ls)
+        0
+        (let ((p (car ls)) (r (cdr ls)))
+          (if (eqv? p e)
+              (+ 1 (contar e r))
+              (contar e r))))))
+
+(define concatenar ; función auxiliar para aplanar.
+  (lambda (l1 l2)
+    (if (null? l1)
+        l2
+        (cons (car l1) (concatenar (cdr l1) l2)))))
+
+(define aplanar ; genero una lista cuyos elementos sean los países cada vez que juegan.
+  (lambda (ls)
+    (if (null? ls)
+        ()
+        (let ((p (car (car (car ls)))) (q (car (car (cdr (car ls))))) (r (cdr ls)))
+          (concatenar (cons p (cons q '())) (aplanar r))))))
+
+(define copa-america-aux ; función que construye la lista de listas impropias.
+  (lambda (ls)
+    (if (null? ls)
+        ()
+        (let ((p (car ls)))
+            (cons (cons p (contar p ls)) (copa-america-aux (eliminar p ls)))))))
+
+(define copa-america ; función principal, le pasa la lista aplanada a la función que construye la lista de listas impropias.
+  (lambda (ls)
+    (if (null? ls)
+        "Lista vacía."
+        (copa-america-aux (aplanar ls)))))
+
+(copa-america '(((Argentina . 5) (Brasil . 0 ))
+((Argentina . 3) (Bolivia . 2))
+((Argentina . 2) (Chile . 1))
+((Bolivia . 1) (Paraguay . 0))
+((Brasil . 1) (Venezuela . 0))
+((Colombia . 0) (Ecuador . 2))
+((Brasil . 2) (Ecuador . 1))
+))

@@ -44,15 +44,14 @@
   (lambda (p1 ls)
     (map (lambda (x) (dist p1 x)) ls)))
 
-(define max_list
+(define max_list ; obtengo mayor de la lista
   (lambda (ls)
-    (let ((elem1 (car ls)))
-      (if (= (length ls) 1)
-          elem1
-          (let ((elem2 (max_list (cdr ls))))
-            (if (> elem2 elem1)
-                elem2
-                elem1))))))
+    (if (null? ls)
+        0
+        (let ((p (car ls)) (q (max_list (cdr ls))))
+          (if (< p q)
+              q
+              p)))))
 
 (define concatenar ; para concatenar listas
   (lambda (l1 l2)
@@ -121,17 +120,17 @@
 (close-input-port i)
 
 "EJERCICIO 6:"
-(define pesopalabra-aux
-  (lambda (st sum n)
-    (if (< n 0)
-        sum
-        (let ((ch (string-ref st n)))
-          (+ sum (pesopalabra-aux st (char->integer ch) (- n 1))))
-    )))
-          
-(define pesopalabra ; wrapper
-  (lambda (x)
-    (pesopalabra-aux x 0 (- (string-length x) 1))))
+
+(define pesopalabra-aux ; función para obtener el peso de cada palabra.
+  (lambda (ls)
+    (if (null? ls)
+      0
+      (let ((p (car ls)) (r (cdr ls)))
+        (+ (char->integer p) (pesopalabra-aux r)))))) ; paso char a integer para obtener peso ascii de cada caracter.
+
+(define pesopalabra ; wrapper para peso palabra.
+  (lambda (st)
+     (pesopalabra-aux (string->list st)))) ; paso string a lista para operar con car y cdr.
 
 (define eliminar ; procedimiento p/ eliminar un elemento de una lista.
   (lambda (n ls)
@@ -163,6 +162,7 @@
 (ordenar '("moto" "auto" "casa" "juego" "aire"))
 
 "EJERCICIO 7:"
+; VERSIÓN 1 SIN MAP
 (define full-reverse-list-aux 
   (lambda (ls e)
     (if (null? ls)
@@ -180,6 +180,7 @@
 
 (full-reverse-list '(1 (2 3 4 (3 (5 6)) 4)))
 
+; VERSIÓN 2 CON MAP
 (define reverse-aux
   (lambda (ls aux)
     (if (list? ls)
@@ -206,6 +207,28 @@
     ))
 
 (fullreverse-list2 '(1 (2 3 4 (3 (5 6)) 4)))
+
+; VERSIÓN 3 CON MAP
+(define colocar
+  (lambda (elem ls)
+    (if (null? ls)
+        (cons elem '())
+        (let ((p (car ls)) (r (cdr ls)))
+          (cons p (colocar elem r))))))
+
+(define revertir
+  (lambda (ls)
+    (if (null? ls)
+        '()
+        (let ((p (car ls)) (r (cdr ls)))
+          (colocar p (revertir r))))))
+
+(define fullreverse-list3
+  (lambda (ls)
+    (revertir (map (lambda (e) (if (list? e)
+                                   (fullreverse-list3 e) e)) ls))))
+
+(fullreverse-list3 '(1 (2 3 4 (3 (5 6)) 4)))
  
 "EJERCICIO 8:"
 (define attach-at-end ; uso attach-at-end porque si paso lista y despues elemento, lo pongo al final.
