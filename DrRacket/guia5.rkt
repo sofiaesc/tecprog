@@ -42,30 +42,29 @@
 
 "EJERCICIO 3:"
 (define cant-izq
-  (lambda (e l)
-    (if (null? l)
-        0
-        (let ((p (car l)) (r (cdr l)))
-          (if (eqv? e p)
-              0
-              (+ 1 (cant-izq e r)))))))
+  (lambda (e ls)
+     (if (pertenece-aux e ls)
+         (+ 1 (cant-izq e (cdr ls)))
+         -1)))
 
-(cant-izq 'd '(a b c d e f))
+(cant-izq 'd '(a b c d e f)) ; devuelve 3.
+(cant-izq 'd '(d b c a e f)) ; si el elemento está primero en la lista, devuelve 0.
+(cant-izq 'd '(a b c e f)) ; si el elemento no está en la lista, devuelve -1.
 
 "EJERCICIO 4:"
 (define attach-at-end
-  (lambda (e l)
-    (if (null? l)
+  (lambda (e ls)
+    (if (null? ls)
         (cons e ())
-        (let ((p (car l)) (q (cdr l)))
+        (let ((p (car ls)) (q (cdr ls)))
           (cons p (attach-at-end e q))))))
 
 (define addif
-  (lambda (e l)
-    (let ((p (car l)) (r (cdr l)) (b (pertenece-aux e l)))
+  (lambda (e ls)
+    (let ((p (car ls)) (r (cdr ls)) (b (pertenece-aux e ls)))
       (if (eqv? #f b)
-          (attach-at-end e l)
-          l))))
+          (attach-at-end e ls)
+          ls))))
 
 (addif 'a '(b c d))
 (addif 'a '(a b c d))
@@ -110,10 +109,10 @@
 
 "EJERCICIO 7:"
 (define aplanar
-  (lambda (l)
-    (if (null? l)
+  (lambda (ls)
+    (if (null? ls)
         ()
-        (let ((p (car l)) (r (cdr l)))
+        (let ((p (car ls)) (r (cdr ls)))
           (if (list? p)
               (concatenar (aplanar p) (aplanar r))
               (cons p (aplanar r))
@@ -122,42 +121,36 @@
 (aplanar '((1 2 3) (9 (2 3 4)) ((((3 4 (7)))))))
 
 "EJERCICIO 8:"
-(define length_2 ; hago  mi propia función length
-  (lambda (l)
-    (if (null? l)
-        0
-        (+ 1 (length_2 (cdr l))))))
-
 (define last-elem ; función para obtener ultimo elem
-  (lambda (l)
-    (let ((p (car l)) (r (cdr l)))
+  (lambda (ls)
+    (let ((p (car ls)) (r (cdr ls)))
       (if (null? r)
           p
           (last-elem r))
     )))
   
 (define first-elems ; función para obtener primeros elementos
-  (lambda (l)
-    (let ((p (car l)) (r (cdr l)))
-      (if (eqv? 1 (length_2 r))
-          (cons p '())
-          (cons p (first-elems r))
+  (lambda (ls)
+    (let ((p (car ls)) (r (cdr ls)))
+      (if (null? (cdr ls))
+        ()
+        (cons p (first-elems r))
     ))))
 
 (define rotar_d ; función para der.
-  (lambda (l)
-    (cons (last-elem l) (first-elems l))))
+  (lambda (ls)
+    (cons (last-elem ls) (first-elems ls))))
   
 (define rotar_i ; función para izq.
-  (lambda (l)
-    (let ((p (car l)) (r (cdr l)))
+  (lambda (ls)
+    (let ((p (car ls)) (r (cdr ls)))
       (attach-at-end p r))))
 
 (define rotar ; wrapper que selecciona función auxiliar.
-  (lambda (s l)
+  (lambda (d ls)
     (cond
-      ((eqv? s 'izquierda) (rotar_i l))
-      ((eqv? s 'derecha) (rotar_d l)))))
+      ((eqv? d 'izquierda) (rotar_i ls))
+      ((eqv? d 'derecha) (rotar_d ls)))))
 
 (rotar 'derecha '(1 2 3 4))
 (rotar 'izquierda '(1 2 3 4))
@@ -168,8 +161,8 @@
     (* x x)))
 
 (define calcula-cuadrados
-  (lambda (l)
-    (map (lambda (x) (cuadrado x)) l)))
+  (lambda (ls)
+    (map (lambda (x) (cuadrado x)) ls)))
 
 (calcula-cuadrados '(1 2 3 4))
 
