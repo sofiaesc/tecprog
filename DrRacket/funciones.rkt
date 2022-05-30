@@ -194,20 +194,16 @@
         (and (display rd) (read_file i)))))
     
 ; función para revertir una lista completamente, sin map.
-(define fullreverse-list-aux 
-  (lambda (ls e)
-    (if (null? ls)
-        e
-        (let ((p (car ls)) (q (cdr ls)))
-          (if (list? p)
-            (fullreverse-list-aux q (cons (fullreverse-list p) e))
-            (fullreverse-list-aux q (cons p e)))))))
-
-(define fullreverse-list ; wrapper
-  (lambda (ls)
-    (if (null? ls)
-      "Lista vacía."
-      (fullreverse-list-aux ls '()))))
+(define fullreverse-list
+  (lambda (lista)
+    (if (null? lista)
+        '()
+        (if (list? (car lista))
+            (concatenar (fullreverse-list (cdr lista)) (list (fullreverse-list (car lista))))
+            (if (null? (cdr lista))
+                lista
+                (concatenar (fullreverse-list (cdr lista)) (list (car lista))))))
+                   ))
 
 ; función para invertir una lista sin lista auxiliar.
 (define inv ; invertir sin lista auxiliar (optimo)
