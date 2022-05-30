@@ -50,13 +50,13 @@
 
 ; función que elimina un elemento dado de una lista.
 (define eliminar
-  (lambda (a l)
-    (if (null? l)
+  (lambda (e ls)
+    (if (null? ls)
         ()
-        (let ((p (car l)) (q (cdr l)))
-            (if (equal? a p)
-                (eliminar a q)
-                (cons p (eliminar a q)))))))
+        (let ((p (car ls)) (q (cdr ls)))
+            (if (equal? e p)
+                (eliminar e q)
+                (cons p (eliminar e q)))))))
 
 ; función que agrupa los elementos iguales en sublistas.
 (define agrupar
@@ -253,6 +253,22 @@
               (cons p (aplanar r))
     )))))
 
+(define last-elem ; función para obtener ultimo elemento.
+  (lambda (ls)
+    (let ((p (car ls)) (r (cdr ls)))
+      (if (null? r)
+          p
+          (last-elem r))
+    )))
+  
+(define first-elems ; función para obtener todos los elementos menos el último.
+  (lambda (ls)
+    (let ((p (car ls)) (r (cdr ls)))
+      (if (null? (cdr ls))
+        ()
+        (cons p (first-elems r))
+    ))))
+
 ; función para obtener profundidad de un árbol
 (define profundidad
   (lambda (ls)
@@ -265,20 +281,31 @@
                   (+ 1 izq)
                   (+ 1 der)))))))
 
-;retorna el peso en ascii de una lista de char
-(define pesopal (lambda (word)
-                  (if (null? word)
-                      0
-                      (+ (char->integer (car word)) (pesopal (cdr word)))
-                      )
-                  ))
+(define pesopalabra-aux ; función para obtener el peso de cada palabra.
+  (lambda (ls)
+    (if (null? ls)
+      0
+      (let ((p (car ls)) (r (cdr ls)))
+        (+ (char->integer p) (pesopalabra-aux r)))))) ; paso char a integer para obtener peso ascii de cada caracter.
 
-;recibe una lista de strings
-;la transforma a una lista de listas de char
-;arma una lista con el peso de cada string en ascii
-;crea una lista de listas impropias que vincula cada palabra con su peso
-(define pesopalabra (lambda (list4)
-                      (map cons list4 (map pesopal (map string->list list4)))
-                    ))
+(define pesopalabra ; wrapper para peso palabra.
+  (lambda (st)
+     (pesopalabra-aux (string->list st)))) ; paso string a lista para operar con car y cdr.
 
-; (pesopalabra '("casa" "auto" "gato")) -> (("casa" . 408) ("auto" . 441) ("gato" . 427))
+(define menor  ; encuentro el elemento de menor peso ascii.
+  (lambda (ls)
+    (if (null? ls)
+        ()
+        (let ((p (car ls)) (q (cdr ls)))
+          (if (null? q)
+              p
+              (if (< (pesopalabra p) (pesopalabra (car q)))
+                  (menor (cons (car ls) (cddr ls)))
+                  (menor (cdr ls))))))))
+     
+(define ordenar  ; construyo la lista con el elem de menor peso ascii, lo elimino  y uso el resto p/ recursividad.
+  (lambda (ls)
+    (if (null? ls)
+        ()
+        (cons (menor ls) (ordenar (eliminar (menor ls) ls)))
+        )))
