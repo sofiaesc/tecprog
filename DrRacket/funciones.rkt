@@ -192,6 +192,14 @@
     (if (eof-object? rd)
         (display "\n")
         (and (display rd) (read_file i)))))
+
+; función que crea un archivo y le escribe adentro.
+(define o (open-output-file "saludo.txt"))
+(display "hola" o)
+(write-char #\space o)
+(display 'mundo! o)
+(newline o)
+(close-output-port o)
     
 ; función para revertir una lista completamente, sin map.
 (define fullreverse-list
@@ -221,6 +229,25 @@
           (if (eqv? e p)
               #t
               (pertenece e r))))))
+
+; función para obtener el menor de una lista.
+(define menor
+  (lambda (ls)
+    (let ((elem1 (car ls)))
+      (if (= (length ls) 1)
+          elem1
+          (let ((elem2 (menor (cdr ls))))
+            (if (< elem2 elem1)
+                elem2
+                elem1))))))
+
+; función para ordenar una lista de menor a mayor (para mayor a menor, cambio el let).
+(define ordenar
+  (lambda (ls)
+    (if (null? ls)
+        ()
+        (let ((m (menor ls)))
+        (cons m (ordenar (eliminar m ls)))))))                
 
 ; función para obtener el mayor de una lista.
 (define mayor
@@ -309,3 +336,38 @@
         ()
         (cons (menor ls) (ordenar (eliminar (menor ls) ls)))
         )))
+
+; XOR
+(define xor
+  (lambda (a b)
+    (if (or (and (not a) b) (and (not b) a))
+        #t
+        #f)))
+
+; SINTAXIS VECTORES:
+(make-vector 3) ; crea vector con 3 posiciones. las llena con 0 si no pongo nada.
+(make-vector 3 'a) ; crea vector con 3 posiciones, las llena con a.
+(make-vector 0 'a) ; crea vector ().
+
+(vector-length '#()) ; 0
+(vector-length '#(a b c)) ; 3
+(vector-length (vector 1 2 3 4)) ; 4
+(vector-length (make-vector 30)) ; 30
+
+(vector-ref '#(a b c) 0) ; a
+(vector-ref '#(a b c) 1) ; b
+(vector-ref '#(a b c) 2) ; c
+
+(let ((v (vector 'a 'b 'c)))
+  (vector-set! v 2 'x) ; cambia elem. en la posición 2 por x.
+  v)
+
+(let ((v (vector 'a 'b 'c)))
+  (vector-fill! v 'x) ; cambia todos los elem. del vector por x.
+  v)
+
+(let ((v (vector 'a 'b 'c)))
+  (vector->list v)) ; cambia vector a lista.
+
+(let ((ls (list 'a 'b 'c)))
+  (list->vector ls)) ; cambia lista a vector.
