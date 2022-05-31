@@ -397,3 +397,9 @@
 
 (let ((ls (list 'a 'b 'c)))
   (list->vector ls)) ; cambia lista a vector.
+
+; SINTAXIS MAP: 
+(map cons '(a b c) '(d e f)) ; ((a . d) (b . e) (c . f))
+(map inv '((a b c) (d e f))) ; ((c b a) (f e d))
+(inv (map inv '((a b c) (d e f)))) ; ((f e d) (c b a))
+(map (lambda (x) (concatenar x '(x))) '((a b c) (d e f))) ; ((a b c x) (d e f x))
