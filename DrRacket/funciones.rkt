@@ -37,6 +37,16 @@
               (+ 1 (count-elem e q))
               (count-elem e q))))))
 
+(define contar ; cuenta la cantidad de un elemento en una lista de listas.
+  (lambda (ls e)
+    (if (null? ls)
+        0
+        (if (list? (car ls))
+            (+ (contar (car ls) e) (contar (cdr ls) e))
+            (if (eqv? (car ls) e)
+                (+ 1 (contar (cdr ls) e))
+                (contar (cdr ls) e))))))
+
 ; función que reemplaza un elemento x por otro y, en una lista.
 (define subst
   (lambda (a b l)
@@ -57,6 +67,16 @@
             (if (equal? e p)
                 (eliminar e q)
                 (cons p (eliminar e q)))))))
+
+(define eliminar ; elimina un elemento dado de una lista de listas.
+  (lambda (ls e)
+    (if (null? ls)
+        ()
+        (if (list? (car ls))
+            (cons (eliminar (car ls) e) (eliminar (cdr ls) e))
+            (if (eqv? (car ls) e)
+                (eliminar (cdr ls) e)
+                (cons (car ls) (eliminar (cdr ls) e)))))))
 
 ; función que agrupa los elementos iguales en sublistas.
 (define agrupar
