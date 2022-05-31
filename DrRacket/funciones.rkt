@@ -233,6 +233,12 @@
                 (concatenar (fullreverse-list (cdr lista)) (list (car lista))))))
                    ))
 
+; función para revertir lista completamente, con map. (usa inv)       
+(define fullreverse-list ; invertir listas anidadas con map
+  (lambda (ls)
+    (inv (map (lambda (e) (if (list? e)
+                                   (fullreverse-list e) e)) ls))))
+
 ; función para invertir una lista sin lista auxiliar.
 (define inv ; invertir sin lista auxiliar (optimo)
   (lambda (ls)
