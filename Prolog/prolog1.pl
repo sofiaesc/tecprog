@@ -1,0 +1,119 @@
+% HIJOS Y NIETOS.
+hijo(tomás, juan).
+hijo(ana, tomás).
+hijo(juan, marcos).
+hijo(alicia, juan).
+
+% nieto(X,Y):- hijo(X,Z), hijo(Z,Y).
+% si pongo nieto(X, marcos) en la consulta me devuelve x = tomás.
+% pongo ; después del resultado, aprieto enter, y me muestra x = alicia.
+% me da todos los nietos de marcos. 
+% si pongo nieto(marcos, X) me devuelve false.
+
+% EDADES.
+edad(juan, 27).
+edad(luis, 30).omo a la pimienta'
+
+% edad(juan, X), edad(luis, Y), X > Y. ----> false.
+% edad(juan, X), edad(luis, Y), X >= Y. ---> false.
+% edad(juan, X), edad(luis, Y), X < Y.  -----> X=27, Y=30.  
+% X < Y ---> Error: variables ligadas.
+
+% EJERCICIO 1:
+f(a, 2).
+f(a, 3).
+f(b, 2).
+f(b, 4).
+f(c, 1).
+f(c, 2).
+
+% a. f(X, 1). ---------------> X = c.
+% b. f(X). -------------------> Error.
+% c. f(a, X). ----------------> X = 2 ; X = 3.
+% d. f(c, 1). ----------------> true ; false.
+% e. f(X, Y). ----------------> X=a, Y=2 ; X=a, Y=3 ; X=b, Y=2 ; X=b, Y=4 ; X=c, Y=1 ; X=c, Y=2.
+% f. f(2, a). -----------------> false.
+% g. f(X, Y), f(X, 4). -----> X=b, Y=2 ; X=b, Y=4 ; false.
+
+% EJERCICIO 2:
+padre(leoncio, alberto).
+padre(leoncio, geronimo).
+padre(alberto, juan).
+padre(alberto, luis).
+padre(geronimo, luisa).
+
+hermano(X,Y):- padre(Z,X), padre(Z,Y), X \= Y.
+nieto(X,Y):- padre(Z,X), padre(Y, Z).
+
+% a. padre(alberto, luis). --> true.
+% b. padre(luis, alberto). --> false.
+% c. hermano(luis, Y) ó hermano(X, luis) ------> X = juan ; false.
+% d. nieto(X, luisa). ----------> false.
+% e. nieto(X, Y). ---------------> X = juan, Y = leoncio ; X = luis, Y = leoncio ; X = luisa, Y = leoncio.
+
+% EJERCICIO 3:
+menu('Bombones de jamón', 'Locro', 'Dulce de batata').
+menu('Bombones de jamón', 'Locro', 'Alfajor norteño').
+menu('Tarta de atún', 'Atados de repollo', 'Dulce de batata').
+menu('Tarta de atún', 'Pollo romano con hierbas y vino', 'Flan').
+menu('Volovanes de atún', 'Matambre con espinacas y parmesano', 'Torta moka').
+menu('Buñuelos de bacalao', 'Pollo romano con hierbas y vino', 'Alfajor norteño').
+
+% a. menu(X,Y,Z).  ----> muestra todos los 
+% b. menu(X,Y,dulce de batata). ---> X = 'Bombones de jamón', Y = 'Locro' ; X = 'Tarta de atún', Y = 'Atados de repollo'.
+% c. menu(X,'Locro',Z). ----> X = 'Bombones de jamón', Z = 'Dulce de batata' ; X = 'Bombones de jamón', Z = 'Alfajor norteño'
+% d. menu(X,'Pato a la naranja',Z). ----> false.
+% e. menu('Locro', Y, Z). ---> false.
+
+% EJERCICIO 4:
+% explicar backtracking. arbolito.
+
+% EJERCICIO 5:
+ruta(santafe, parana).
+ruta(parana, corrientes).
+ruta(santafe, cordoba).
+ruta(santafe, coronda).
+ruta(santafe, rosario).
+ruta(rosario, capital).
+ruta(rosario, mardelplata).
+ruta(capital, cordoba).
+
+% a. ruta(X, cordoba) --> X=santafe ; X=capital.
+% b. ruta(parana, Y) ----> Y=corrientes.
+% c. ruta(parana, cordoba) ----> false. // ruta(cordoba, parana) ---> false.
+combinacion(X, Y):- ruta(X, Z), ruta(Z, Y).
+% d. combinacion(santafe, corrientes). ---> true. (sería santafe,parana y parana,corrientes).
+
+% EJERCICIO 6:
+estrella(sol).
+planeta(mercurio).
+% hacer solo 3 lunas para cada planeta.
+
+% EJERCICIO 7:
+entrada('ensalada').
+entrada('empanada').
+entrada('tarta').
+principal('lomo a la pimienta').
+principal('locro').
+principal('ñoquis').
+postre('flan').
+postre('pirineos').
+postre('cheesecake').
+
+carta(Entrada,Principal,Postre):- entrada(Entrada), principal(Principal), postre(Postre).
+% devuelve 27 resultados, combinando todas las posibilidades.
+% carta(Entrada,Principal,Postre):- entrada(Entrada), principal(Principal), "Locro") 
+
+% EJERCICIO 8:
+% progenitor(x, y).
+% hombre(x).
+% mujer(x).
+
+padre(X, Y):- progenitor(X,Y), hombre(X).
+madre(X, Y):- progenitor(X,Y), mujer(X).
+abuelo(X, Y):- progenitor(X,Z), progenitor(Z,Y), hombre(X).
+abuela(X, Y):- progenitor(X,Z), progenitor(Z,Y), mujer(X).
+hermanos(X, Y):- progenitor(Z,X), progenitor(Z,Y), X \= Y.
+hermano(X,Y):- hermanos(X,Y), hombre(X).
+hermana(X,Y):- hermanos(X,Y), mujer(Y).
+
