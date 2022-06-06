@@ -12,7 +12,7 @@ hijo(alicia, juan).
 
 % EDADES.
 edad(juan, 27).
-edad(luis, 30).omo a la pimienta'
+edad(luis, 30).
 
 % edad(juan, X), edad(luis, Y), X > Y. ----> false.
 % edad(juan, X), edad(luis, Y), X >= Y. ---> false.
@@ -59,14 +59,17 @@ menu('Tarta de atún', 'Pollo romano con hierbas y vino', 'Flan').
 menu('Volovanes de atún', 'Matambre con espinacas y parmesano', 'Torta moka').
 menu('Buñuelos de bacalao', 'Pollo romano con hierbas y vino', 'Alfajor norteño').
 
-% a. menu(X,Y,Z).  ----> muestra todos los 
-% b. menu(X,Y,dulce de batata). ---> X = 'Bombones de jamón', Y = 'Locro' ; X = 'Tarta de atún', Y = 'Atados de repollo'.
+% a. menu(X,Y,Z).  ----> muestra todos los menúes. 
+% b. menu(X,Y,'Dulce de batata'). ---> X = 'Bombones de jamón', Y = 'Locro' ; X = 'Tarta de atún', Y = 'Atados de repollo'.
 % c. menu(X,'Locro',Z). ----> X = 'Bombones de jamón', Z = 'Dulce de batata' ; X = 'Bombones de jamón', Z = 'Alfajor norteño'
 % d. menu(X,'Pato a la naranja',Z). ----> false.
 % e. menu('Locro', Y, Z). ---> false.
 
 % EJERCICIO 4:
-% explicar backtracking. arbolito.
+% Se ejecuta menu(X,'Locro',Z). Empieza a buscar entre los menus definidos antes.
+% Entra en menu('Bombones de jamón', 'Locro', 'Dulce de batata'). Encuentra una solución, ya que tiene 'Locro' en su segundo argumento.
+% Sigue buscando soluciones posibles, por lo que entra en menu('Bombones de jamón', 'Locro', 'Alfajor norteño') y consigue otra solución.
+% Sigue buscando. Entra en los próximos menúes pero no encuentra solución. Termina la ejecución.
 
 % EJERCICIO 5:
 ruta(santafe, parana).
@@ -86,8 +89,47 @@ combinacion(X, Y):- ruta(X, Z), ruta(Z, Y).
 
 % EJERCICIO 6:
 estrella(sol).
-planeta(mercurio).
-% hacer solo 3 lunas para cada planeta.
+orbita(sol,mercurio).
+orbita(sol,venus).
+orbita(sol,tierra).
+orbita(sol,marte).
+orbita(sol,jupiter).
+orbita(sol,saturno).
+orbita(sol,urano).
+orbita(sol,neptuno).
+orbita(sol,pluton).
+
+orbita(tierra,luna).
+
+orbita(marte,deimos).
+orbita(marte,phobos).
+
+orbita(pluton,charon).
+orbita(pluton,nix).
+orbita(pluton,hydra).
+
+orbita(jupiter,adrastea).
+orbita(jupiter,aitne).
+orbita(jupiter,amalthea).
+
+orbita(saturno,aegir).
+orbita(saturno,albiorix).
+orbita(saturno,atlas).
+
+orbita(urano,ariel).
+orbita(urano,belinda).
+orbita(urano,bianca).
+
+orbita(neptuno,despina).
+orbita(neptuno,galatea).
+orbita(neptuno,halimede).
+
+% Inciso a:
+planeta(X):- orbita(sol,X).
+luna(X):- orbita(Y,X), planeta(Y).
+lunaDe(X,Y):- orbita(X,Y), planeta(X).
+
+% Inciso b: No se podría. Se necesitaría poder hacer un contador con una función dada o recursión.
 
 % EJERCICIO 7:
 entrada('ensalada').
@@ -105,9 +147,42 @@ carta(Entrada,Principal,Postre):- entrada(Entrada), principal(Principal), postre
 % carta(Entrada,Principal,Postre):- entrada(Entrada), principal(Principal), "Locro") 
 
 % EJERCICIO 8:
-% progenitor(x, y).
-% hombre(x).
-% mujer(x).
+hombre(sebastian).
+hombre(diego).
+hombre(alejandro).
+hombre(nicolas).
+hombre(fernando).
+hombre(adrian).
+mujer(sofia).
+mujer(laura).
+mujer(natalia).
+mujer(rocio).
+mujer(yanina).
+mujer(graciela).
+mujer(teresa).
+mujer(lara).
+mujer(milagros).
+
+progenitor(graciela,laura).
+progenitor(graciela,natalia).
+progenitor(graciela,yanina).
+progenitor(fernando,laura).
+progenitor(fernando,natalia).
+progenitor(fernando,yanina).
+progenitor(teresa,sebastian).
+progenitor(teresa,diego).
+progenitor(teresa,alejandro).
+progenitor(teresa,rocio).
+progenitor(adrian,sebastian).
+progenitor(adrian,diego).
+progenitor(adrian,alejandro).
+progenitor(adrian,rocio).
+progenitor(laura,sofia).
+progenitor(laura,nicolas).
+progenitor(alejandro,sofia).
+progenitor(alejandro,nicolas).
+progenitor(nicolas,lara).
+progenitor(nicolas,milagros).
 
 padre(X, Y):- progenitor(X,Y), hombre(X).
 madre(X, Y):- progenitor(X,Y), mujer(X).
@@ -115,5 +190,50 @@ abuelo(X, Y):- progenitor(X,Z), progenitor(Z,Y), hombre(X).
 abuela(X, Y):- progenitor(X,Z), progenitor(Z,Y), mujer(X).
 hermanos(X, Y):- progenitor(Z,X), progenitor(Z,Y), X \= Y.
 hermano(X,Y):- hermanos(X,Y), hombre(X).
-hermana(X,Y):- hermanos(X,Y), mujer(Y).
+hermana(X,Y):- hermanos(X,Y), mujer(X).
 
+es_madre(X):- madre(X,Y).
+es_padre(X):- madre(X,Y).
+tia(X,Y):- hermana(X,Z), progenitor(Z,Y).
+yerno(X,Y):- hombre(X), progenitor(X,Z), progenitor(C,Z), X \= C, progenitor(Y,C).
+nuera(X,Y):- mujer(X), progenitor(X,Z), progenitor(C,Z), X \= C, progenitor(Y,C).
+
+%EJERCICIO 9:
+medico(tania).
+abogado(haydee).
+abogado(pedro).
+ingeniero(haydee).
+contador(livio).
+
+mujer(tania).
+mujer(haydee).
+hombre(livio).
+hombre(pedro).
+
+novela(rayuela).
+novela(karamazov).
+novela(leones).
+cuentos(octaedro).
+poemas(inventario).
+
+largo(rayuela).
+largo(karamazov).
+largo(inventario).
+corto(octaedro).
+corto(leones).
+
+gusta(livio,rayuela).
+gusta(pedro,X):- cuentos(X).
+gusta(X,Y):- abogado(X), novela(Y), largo(Y).
+gusta(X,Y):- ingeniero(X), novela(Y).
+gusta(X,Y):- medico(X), novela(Y).
+gusta(X,Y):- mujer(X), largo(Y).
+gusta(X,Y):- contador(X), hombre(X), cuentos(Y).
+gusta(X,Y):- contador(X), hombre(X), poemas(Y).
+         
+librovalioso(X):- gusta(Y,X), gusta(Z,X), Y \= Z.
+
+% a. gusta(livio, X).
+% b. gusta(X, leones).
+% c. corto(X).
+% Adicional: librovalioso(X).
