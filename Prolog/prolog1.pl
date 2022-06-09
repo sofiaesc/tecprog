@@ -192,8 +192,8 @@ hermanos(X, Y):- progenitor(Z,X), progenitor(Z,Y), X \= Y.
 hermano(X,Y):- hermanos(X,Y), hombre(X).
 hermana(X,Y):- hermanos(X,Y), mujer(X).
 
-es_madre(X):- madre(X,Y).
-es_padre(X):- madre(X,Y).
+es_madre(X):- madre(X,Y). % singleton variable?
+es_padre(X):- padre(X,Y). % singleton variable?
 tia(X,Y):- hermana(X,Z), progenitor(Z,Y).
 yerno(X,Y):- hombre(X), progenitor(X,Z), progenitor(C,Z), X \= C, progenitor(Y,C).
 nuera(X,Y):- mujer(X), progenitor(X,Z), progenitor(C,Z), X \= C, progenitor(Y,C).
@@ -236,4 +236,4 @@ librovalioso(X):- gusta(Y,X), gusta(Z,X), Y \= Z.
 % a. gusta(livio, X).
 % b. gusta(X, leones).
 % c. corto(X).
-% Adicional: librovalioso(X).
+% Adicional: librovalioso(X). % esto no da bien, repite muchas veces la respuesta.
