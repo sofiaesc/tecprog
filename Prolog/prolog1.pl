@@ -130,7 +130,8 @@ luna(L):- orbita(P,L), planeta(P).
 lunaDe(P,L):- orbita(P,L), planeta(P).
 
 % Inciso b:
-cantLunas(P,Cant):- 
+% cantLunas(P,Cant):-  % Condicion de corte.
+% cantLunas(P,Cant):-  % Recursion.
 
 % EJERCICIO 7:
 entrada('ensalada').
@@ -187,11 +188,13 @@ progenitor(nicolas,milagros).
 
 padre(X, Y):- progenitor(X,Y), hombre(X).
 madre(X, Y):- progenitor(X,Y), mujer(X).
-abuelo(X, Y):- progenitor(X,Z), progenitor(Z,Y), hombre(X).
-abuela(X, Y):- progenitor(X,Z), progenitor(Z,Y), mujer(X).
-hermanos(X, Y):- progenitor(Z,X), progenitor(Z,Y), X \= Y.
+abuelo(X, Y):- padre(X,Z), progenitor(Z,Y).
+abuela(X, Y):- madre(X,Z), progenitor(Z,Y).
+hermanos(X, Y):- padre(Z,X), padre(Z,Y), madre(C,X), madre(C,Y), X \= Y.
 hermano(X,Y):- hermanos(X,Y), hombre(X).
 hermana(X,Y):- hermanos(X,Y), mujer(X).
+sucesor(X,Y):- progenitor(Y,X). % condicion de corte
+sucesor(X,Y):- progenitor(Y,Z), sucesor(X,Z). % recursion
 
 es_madre(X):- madre(X,_). 
 es_padre(X):- padre(X,_). 
