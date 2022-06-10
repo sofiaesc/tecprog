@@ -66,10 +66,10 @@ menu('Buñuelos de bacalao', 'Pollo romano con hierbas y vino', 'Alfajor norteñ
 % e. menu('Locro', Y, Z). ---> false.
 
 % EJERCICIO 4:
-% Se ejecuta menu(X,'Locro',Z). Empieza a buscar entre los menus definidos antes.
-% Entra en menu('Bombones de jamón', 'Locro', 'Dulce de batata'). Encuentra una solución, ya que tiene 'Locro' en su segundo argumento.
-% Sigue buscando soluciones posibles, por lo que entra en menu('Bombones de jamón', 'Locro', 'Alfajor norteño') y consigue otra solución.
-% Sigue buscando. Entra en los próximos menúes pero no encuentra solución. Termina la ejecución.
+% Se ejecuta menu(X,'Locro',Z). Empieza a buscar entre los menus definidos antes, sabiendo que hay dos condiciones verdaderas tras evaluar todas.
+% Entra en menu('Bombones de jamón', 'Locro', 'Dulce de batata'). Encuentra una solución, ya que tiene 'Locro' en su segundo argumento y devuelve.
+% Sigue buscando soluciones posibles, por lo que entra en menu('Bombones de jamón', 'Locro', 'Alfajor norteño') y devuelve esa otra solución.
+% Como ya no tiene condiciones de true, deja de buscar.
 
 % EJERCICIO 5:
 ruta(santafe, parana).
@@ -125,11 +125,12 @@ orbita(neptuno,galatea).
 orbita(neptuno,halimede).
 
 % Inciso a:
-planeta(X):- orbita(sol,X).
-luna(X):- orbita(Y,X), planeta(Y).
-lunaDe(X,Y):- orbita(X,Y), planeta(X).
+planeta(P):- orbita(sol,P).
+luna(L):- orbita(P,L), planeta(P).
+lunaDe(P,L):- orbita(P,L), planeta(P).
 
-% Inciso b: No se podría. Se necesitaría poder hacer un contador con una función dada o recursión.
+% Inciso b:
+cantLunas(P,Cant):- 
 
 % EJERCICIO 7:
 entrada('ensalada').
@@ -192,8 +193,8 @@ hermanos(X, Y):- progenitor(Z,X), progenitor(Z,Y), X \= Y.
 hermano(X,Y):- hermanos(X,Y), hombre(X).
 hermana(X,Y):- hermanos(X,Y), mujer(X).
 
-es_madre(X):- madre(X,Y). % singleton variable?
-es_padre(X):- padre(X,Y). % singleton variable?
+es_madre(X):- madre(X,_). 
+es_padre(X):- padre(X,_). 
 tia(X,Y):- hermana(X,Z), progenitor(Z,Y).
 yerno(X,Y):- hombre(X), progenitor(X,Z), progenitor(C,Z), X \= C, progenitor(Y,C).
 nuera(X,Y):- mujer(X), progenitor(X,Z), progenitor(C,Z), X \= C, progenitor(Y,C).
