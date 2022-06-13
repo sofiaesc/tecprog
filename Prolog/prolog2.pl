@@ -15,17 +15,19 @@ cantidad([_|R],Elem):- cantidad(R,Elem2), Elem is Elem2 + 1. %cuenta.
 suma([],0).
 suma([X|R],Suma):- suma(R,Suma2), Suma is Suma2 + X.
 
-% EJERCICIO 5: %POCHO
-positivo(X):- X >= 0.
+% EJERCICIO 5:
+positivos([],[]).
+positivos([X|R1],[X|R2]):-X>=0,positivos(R1,R2),!.
+positivos([_|R1],LP):-positivos(R1,LP).
 
-concatenar([],L,L).
-concatenar([X|L1],L2,[X|L3]):- concatenar(L1,L2,L3).
-
-%listaPositivos([],L2).
-%listaPositivos([X|L1],L2):- positivo(X), concatenar().
-
-% EJERCICIO 6: %POCHO
-misma_longitud(L1,L2):- cantidad(L1,E1), cantidad(L2,E2), E1 = E2.
+% EJERCICIO 6:
 suma_lista([],[],[]).
-suma_lista([X|R1],[Y|R2],LS):- Z is X + Y, concatenar(Z,LS,L2), suma_lista(R1,R2,L2).
-suma_lista([_|L1],[_|L2],LS):- misma_longitud(L1,L2), suma_lista(L1,L2,LS). %wrapper.
+suma_lista([X1|R1],[X2|R2],[S|RS]):- S is X1+X2,suma_lista(R1,R2,RS).
+
+% EJERCIIO 7: 
+eliminar(_,[],[]).
+eliminar(X,[X|R1],R2):- eliminar(X, R1, R2).
+eliminar(X, [Y|R1], [Y|R2]):- eliminar(X, R1, R2).
+
+eliminar_dup([],[]).
+eliminar_dup([X|R1],[X|R2]):- eliminar(X, R1, R3), eliminar_dup(R3,R2).
