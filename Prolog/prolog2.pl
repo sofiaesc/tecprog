@@ -36,8 +36,8 @@ eliminar_dup([X|R1],[X|R2]):- eliminar(X, R1, R3), eliminar_dup(R3,R2). % concat
 mayor(E1,E2,E1):- E1 >= E2.
 mayor(E1,E2,E2):- E1 < E2.
 
-profundidad([],0). % rama vacía.
-profundidad([_],1). % entro en un paréntesis.
+profundidad([],0). % entro en una lista vacía (rama vacía).
+profundidad([_],1). % entro en una lista de un solo elemento (hoja).
 profundidad([I,_,D],P):- profundidad(I,P1), profundidad(D,P2), mayor(P1,P2,P3), P is P3 + 1. %comparo izq y der, sumo 1 cuando entro.
 
 % EJERCICIO 9:
