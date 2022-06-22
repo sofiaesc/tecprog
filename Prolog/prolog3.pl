@@ -46,17 +46,15 @@ buscar(X,[X]):- dic(LDic), miembro(X,LDic), !.
 buscar(X,L):- dic(LDic), not(miembro(X,LDic)), atom_chars(X,LElem), buscar_aux(LElem,LDic,L).
 
 % EJERCICIO 7:
-reemplazar_aux(_,_,_,[],[]):-!.
-reemplazar_aux(_,_,Max,_,_):- Max = 0, !.
-reemplazar_aux(Reemplazo,Reemplazado,Max,[Reemplazado|R1],[Reemplazo|R2]):- Max2 is Max-1, reemplazar_aux(Reemplazo,Reemplazado,Max2,R1,R2).
-reemplazar_aux(Reemplazo,Reemplazado,Max,[X|R1],[X|R2]):- reemplazar_aux(Reemplazo,Reemplazado,Max,R1,R2).
+reemplazar(_,_,Ins,_,_,_):- Ins < 1, fail.
+reemplazar(_,_,_,0,_,_):- fail.
+reemplazar(_,_,_,Max,_,_):- Max < -1, fail.
 
 reemplazar(_,_,_,_,[],[]):- !.
-reemplazar(Reemplazo,Reemplazado,Ins,Max,L,LR):- Ins = 1, reemplazar_aux(Reemplazo,Reemplazado,Max,L,LR).
-reemplazar(Reemplazo,Reemplazado,Ins,Max,[Reemplazado|R1],[Reemplazado|R2]):- Ins > 1, Ins2 = Ins-1, reemplazar(Reemplazo,Reemplazado,Ins2,Max,R1,R2).
-reemplazar(Reemplazo,Reemplazado,Ins,Max,[X|R1],[X|R2]):- reemplazar(Reemplazo,Reemplazado,Ins,Max,R1,R2).
+reemplazar(_,_,_,Max,R,R):- Max = 0, !.
 
-% condiciones de false:
-reemplazar(_,_,Ins,_,_,_):- Ins < 1, fail.
-reemplazar(_,_,_,Max,_,_):- Max = 0, fail.
-reemplazar(_,_,_,Max,_,_):- Max < -1, fail.
+reemplazar(E,X,Ins,Max,[E|R1],[X|R2]):- Ins = 1, Max = -1, reemplazar(E,X,Ins,Max,R1,R2),!.
+reemplazar(E,X,Ins,Max,[Y|R1],[Y|R2]):- E \= Y, Ins = 1, Max = -1, reemplazar(E,X,Ins,Max,R1,R2),!.
+reemplazar(E,X,Ins,Max,[E|R1],[X|R2]):- Ins = 1, Max2 is Max - 1, reemplazar(E,X,Ins,Max2,R1,R2),!.
+reemplazar(E,X,Ins,Max,[Y|R1],[Y|R2]):- E \= Y, reemplazar(E,X,Ins,Max,R1,R2),!.
+reemplazar(E,X,Ins,Max,[Y|R1],[Y|R2]):- Ins > 1, Ins2 is Ins - 1, reemplazar(E,X,Ins2,Max,R1,R2).
