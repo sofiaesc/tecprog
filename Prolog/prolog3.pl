@@ -46,15 +46,48 @@ buscar(X,[X]):- dic(LDic), miembro(X,LDic), !.
 buscar(X,L):- dic(LDic), not(miembro(X,LDic)), atom_chars(X,LElem), buscar_aux(LElem,LDic,L).
 
 % EJERCICIO 7:
-reemplazar(_,_,Ins,_,_,_):- Ins < 1, fail.
-reemplazar(_,_,_,0,_,_):- fail.
-reemplazar(_,_,_,Max,_,_):- Max < -1, fail.
+%fallos:
+reemplazar(_,_,Ins,_,_,_):- Ins < 1, write("El valor de inicio debe ser mayor o igual a 1.\n"), !, fail.
+reemplazar(_,_,_,Max,_,_):- Max < 1, Max \= 0, Max \= -1, write("La cantidad de reemplazos debe ser -1 o mayor o igual a 1.\n"), !, fail.
 
+%cortes de la recursividad:
 reemplazar(_,_,_,_,[],[]):- !.
-reemplazar(_,_,_,Max,R,R):- Max = 0, !.
+reemplazar(_,_,_,0,R,R):- !.
 
-reemplazar(E,X,Ins,Max,[E|R1],[X|R2]):- Ins = 1, Max = -1, reemplazar(E,X,Ins,Max,R1,R2),!.
-reemplazar(E,X,Ins,Max,[Y|R1],[Y|R2]):- E \= Y, Ins = 1, Max = -1, reemplazar(E,X,Ins,Max,R1,R2),!.
-reemplazar(E,X,Ins,Max,[E|R1],[X|R2]):- Ins = 1, Max2 is Max - 1, reemplazar(E,X,Ins,Max2,R1,R2),!.
-reemplazar(E,X,Ins,Max,[Y|R1],[Y|R2]):- E \= Y, reemplazar(E,X,Ins,Max,R1,R2),!.
-reemplazar(E,X,Ins,Max,[Y|R1],[Y|R2]):- Ins > 1, Ins2 is Ins - 1, reemplazar(E,X,Ins2,Max,R1,R2).
+%recursividad:
+reemplazar(E,X,1,-1,[E|R1],[X|R2]):- reemplazar(E,X,1,-1,R1,R2),!.
+reemplazar(E,X,1,Max,[E|R1],[X|R2]):- Max2 is Max - 1, reemplazar(E,X,1,Max2,R1,R2), !.
+reemplazar(E,X,Ins,Max,[E|R1],[E|R2]):- Ins > 1, Ins2 is Ins - 1, reemplazar(E,X,Ins2,Max,R1,R2), !.
+reemplazar(E,X,Ins,Max,[Y|R1],[Y|R2]):- E \= Y, reemplazar(E,X,Ins,Max,R1,R2).
+
+% Ejercicio 8:
+% Modelado de la casa:
+% Base de conocimientos:
+conectado(a,b).
+conectado(a,d).
+conectado(b,c).
+conectado(b,e).
+conectado(c,g).
+conectado(d,f).
+conectado(e,f).
+conectado(f,g).
+conectado(g,salida).
+
+% Reglas:
+conectados(X,Y):- conectado(X,Y).
+conectados(X,Y):- conectado(Y,X).
+
+% Agrego a la lista al final si no está.
+agregar_nuevo(X,[],[X]):- !.
+agregar_nuevo(X,[X|R],[X|R]):- !.
+agregar_nuevo(X,[Y|R1],[Y|R2]):- agregar_nuevo(X,R1,R2).
+
+% Verifico si está en la lista el elemento p/ evitar bucles:
+miembro(X,[X|_]):- !.
+miembro(X,[_|R]):- miembro(X,R).
+
+% Función auxiliar.
+salir(Entrada,[Hab|R],Camino):- !.
+
+% Wrapper:
+salir(Entrada,Camino):- salir(Entrada,[Entrada],Camino).
