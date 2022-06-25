@@ -61,8 +61,7 @@ reemplazar(E,X,Ins,Max,[E|R1],[E|R2]):- Ins > 1, Ins2 is Ins - 1, reemplazar(E,X
 reemplazar(E,X,Ins,Max,[Y|R1],[Y|R2]):- E \= Y, reemplazar(E,X,Ins,Max,R1,R2).
 
 % Ejercicio 8:
-% Modelado de la casa:
-% Base de conocimientos:
+% Cuerpo de conocimientos:
 conectado(a,b).
 conectado(a,d).
 conectado(b,c).
@@ -73,21 +72,18 @@ conectado(e,f).
 conectado(f,g).
 conectado(g,salida).
 
-% Reglas:
-conectados(X,Y):- conectado(X,Y).
-conectados(X,Y):- conectado(Y,X).
-
-% Agrego a la lista al final si no está.
-agregar_nuevo(X,[],[X]):- !.
-agregar_nuevo(X,[X|R],[X|R]):- !.
-agregar_nuevo(X,[Y|R1],[Y|R2]):- agregar_nuevo(X,R1,R2).
+% Regla:
+conectados(X,Y):- conectado(X,Y); conectado(Y,X).
 
 % Verifico si está en la lista el elemento p/ evitar bucles:
 miembro(X,[X|_]):- !.
 miembro(X,[_|R]):- miembro(X,R).
 
-% Función auxiliar.
-salir(Entrada,[Hab|R],Camino):- !.
+% Condición de corte. Cuando llega a Entrada (a), termina la recursión.
+salir_aux(Entrada,[Entrada|R],[Entrada|R]):- !.
 
-% Wrapper:
-salir(Entrada,Camino):- salir(Entrada,[Entrada],Camino).
+% Recursión. Va buscando las conexiones desde la salida para atrás.
+salir_aux(Entrada,[Hab1|R],Camino) :- conectados(Hab1,Hab2), not(miembro(Hab2,[Hab1|R])), salir_aux(Entrada,[Hab2,Hab1|R],Camino).
+
+% Wrapper. Paso la salida para empezar buscando sus conexiones y después llegar hasta Entrada.
+salir(Entrada,Camino) :- salir_aux(Entrada,[salida],Camino).
