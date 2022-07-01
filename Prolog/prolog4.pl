@@ -1,3 +1,16 @@
+% EJERCICIO 1:
+
+reina(2,3).
+alfil(6,3).
+torre(8,5).
+
+diferencia(F,C,X):- F >= C, X is F - C, !.
+diferencia(F,C,X):- F < C, X is C - F.
+
+amenaza(F,C,torre(F2,C2)):- torre(F2,C2), F =:= F2; torre(F2,C2), C =:= C2.
+amenaza(F,C,alfil(F2,C2)):- alfil(F2,C2), diferencia(F,F2,D1), diferencia(C,C2,D2), D1 =:= D2.
+amenaza(F,C,reina(F2,C2)):- reina(F2,C2), diferencia(F,F2,D1), diferencia(C,C2,D2), D1 =:= D2; reina(F2,C2), F =:= F2; reina(F2,C2), C =:= C2.
+
 % EJERCICIO 2:
 
 % Función que determina si un elemento es miembro de una lista.
@@ -110,4 +123,43 @@ viaje('Tucumán', 'Córdoba', 7, 8).
 viaje('Tucumán', 'Córdoba', 12, 8).
 viaje('Tucumán', 'Córdoba', 18, 8).
 
-% a la miercole q ta dificil este
+% Función auxiliar para sumar las horas tal que su dominio sea [0,24].
+suma_horas(Horas,Cantidad,Aux):- Aux is Horas+Cantidad, Aux < 24, !.
+suma_horas(Horas,Cantidad,Resul):-Aux is Horas+Cantidad, Aux >= 24, Resul is Aux - 24.
+
+% Función auxiliar para determinar si un elemento es miembro de una lista.
+miembro(X,[X|_]):- !.
+miembro(X,[_|Resto]):-
+    miembro(X,Resto).
+
+% Llega al destino desde una escala.
+camino_aux(Origen,Destino,Llegada,HorasAcum,_,[[Origen,Destino,Salida,Llego]]):-
+    viaje(Origen,Destino,Salida,Horas),
+    Cond is Salida - HorasAcum,
+    Cond =< 2, Cond >= 0,
+    suma_horas(HorasAcum,Cond,Espera),
+    suma_horas(Espera,Horas,Llego),
+    Dif2 is Llegada - Llego, Dif2 =< 2, Dif2 >= 0,!.
+
+% Sigue buscando escalas hasta llegar al destino.
+camino_aux(Origen,Destino,Llegada,HorasAcum,Visitados,[[Origen,Escala,Salida,Llego]|Resul]):-
+    viaje(Origen,Escala,Salida,Horas),
+    Escala \= Destino,
+    Cond is Salida - HorasAcum,
+    Cond =< 2, Cond >= 0,
+    suma_horas(HorasAcum,Cond,Espera),
+    not(miembro(Escala,Visitados)),
+    suma_horas(Espera,Horas,Llego),
+    camino_aux(Escala,Destino,Llegada,Llego,[Escala|Visitados],Resul).
+
+% Llega al destino sin escalas.
+camino(Origen,Destino,Llegada,[[Origen,Destino,Salida,Llego]]):-
+    viaje(Origen,Destino,Salida,Horas),
+    suma_horas(Salida,Horas,Llego),
+    Dif2 is Llegada - Llego, Dif2 =< 2, Dif2 >= 0, !.
+
+% Llama al auxiliar para buscar las escalas hasta llegar a destino.
+camino(Origen,Destino,Llegada,[[Origen,Escala,Salida,Llego]|Tramos]):-
+    viaje(Origen,Escala,Salida,Horas),
+    suma_horas(Salida,Horas,Llego),
+    camino_aux(Escala,Destino,Llegada,Llego,[Escala|[Origen]],Tramos).
