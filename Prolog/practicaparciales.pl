@@ -53,3 +53,4 @@ dividir(L,[L]).
 resu(R):- lista_atomos(L), ordenar_lista(L,L2), dividir(L2,R).
 
 % ----------------EJERCICIO SOPA----------------
+
